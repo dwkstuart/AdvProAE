@@ -11,25 +11,7 @@ abstract class World {
 	protected Creature[][] grid;
 	protected final int rows;
 	protected final int cols;
-	protected int specAbirths;
 
-	public int getSpecAbirths() {
-		return specAbirths;
-	}
-
-	public void setSpecAbirths() {
-		this.specAbirths++;
-	}
-
-	public int getSpecBbirths() {
-		return specBbirths;
-	}
-
-	public void setSpecBbirths() {
-		this.specBbirths++;
-	}
-
-	protected int specBbirths;
 
 	/**
 	 * Constructor for abstract class World
@@ -64,7 +46,7 @@ abstract class World {
 
 			for (int k = 0; k < cols; k++) {
 				if (grid[i][k] == null) {
-					System.out.print("-");
+					System.out.print("_");
 				} else
 					System.out.print(grid[i][k]);
 			}
@@ -103,7 +85,9 @@ abstract class World {
 	 * @param y
 	 * @return String
 	 */
-	abstract public Creature getCellContents(int x, int y);
+	public synchronized Creature getCellContents(int x, int y){
+		return this.grid[x][y];	
+	}
 
 	abstract public int alterXPosition(int x);
 

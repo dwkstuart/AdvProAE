@@ -2,13 +2,13 @@
  * @author 0207805s David Stuart
  *
  */
-public class TestMain {
+public class TestWorld {
 
 	public static void main(String[] args) {
 		//create an instance of the Edgeworld
 		// EdgeWorld test = new EdgeWorld(11,42);
 		//create and instance of the TorusWorld
-		TorusWorld test = new TorusWorld(30, 100);
+		TorusWorld test = new TorusWorld(20, 20);
 
 		//print empty grid
 		test.printGrid();
@@ -16,12 +16,11 @@ public class TestMain {
 		
 		//create and instance of each species
 		SpeciesA a = new SpeciesA(6, 5, test);
-		SpeciesB b = new SpeciesB(5, 23, test);
-	
+		SpeciesB b = new SpeciesB(5, 9, test);
 	
 		a.start();
 		b.start();
-		//d.start();
+
 	
 		for (;;) {
 			try {
@@ -33,8 +32,6 @@ public class TestMain {
 			}
 
 			test.printGrid();
-			System.out.println("Number of SpeciesA births " + test.getSpecAbirths());
-			System.out.println("Number of SpeciesB births " + test.getSpecBbirths());
 
 		}
 

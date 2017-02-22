@@ -1,5 +1,3 @@
-import java.util.Random;
-
 /**
  * Abstract Superclass Used to create generic creature objects and handle the
  * logic species reproduction, run method.
@@ -9,17 +7,19 @@ import java.util.Random;
  */
 abstract class Creature extends Thread {
 
-	// instance variables
-	protected int lifespan;
-	protected int MAXLIFE;
-	protected double speciesFitness;
+	// instance variables that will need to be initialized in the concrete classes
+	private int lifespan;
+	private int MAXLIFE;
+	private double speciesFitness;
+	
 	// position in the grid on x axis
 	private final int posX;
-	// position on the grid on y axis
+		// position on the grid on y axis
 	private final int posY;
 	// shared world object containing
 	protected final World world;
-	//Left and Right offset determine the range of cells creature can reproduce in
+	// Left and Right offset determine the range of cells 
+	//	creature can reproduce in
 	private final int LEFTOFFSET = -1;
 	private final int RIGHTOFFSET = 1;
 
@@ -54,10 +54,14 @@ abstract class Creature extends Thread {
 
 		// synchronize world object whilst reproduce method is taking place to
 		// avoid race conditions
+		
 		synchronized (this.world) {
+			// make the position of the creature in the array null so it
+			// treats its own square as if empty
+			world.makeNull(posX, posY);
+
 			// cycles through the 9 positions on the grid
 			// that surround the creature
-			
 			for (int i = LEFTOFFSET; i <= RIGHTOFFSET; i++) {
 				for (int k = LEFTOFFSET; k <= RIGHTOFFSET; k++) {
 
@@ -77,42 +81,27 @@ abstract class Creature extends Thread {
 						// fetches the creature at position for testing
 						Creature testCellContents = world.getCellContents(xNew, yNew);
 
-						// deals with case where it is the parent creates grid
-						// position
-						if (xNew == posX && yNew == posY) {
-							
-							world.makeNull(posX, posY);
-							// performs check if birth is successful
+						if (testCellContents == null) {
+
 							if (this.fillEmptyCell()) {
-								// places child in the empty cell
 								Creature child = this.produceChild(xNew, yNew);
-								// start the child thread
 								child.start();
 
 							}
-						} else {
-							// if cell is empty try and place child
-							if (testCellContents == null) {
+						}
 
-								if (this.fillEmptyCell()) {
-									Creature child = this.produceChild(xNew, yNew);
-									child.start();
-
-								}
-							}
-							// if test has creature in it check if child is
-							// successfully
-							// placed
-							if (testCellContents != null) {
-								// runs probablity check to see if murder of
-								// other creature is successful
-								if (this.murderSuccessful(testCellContents)) {
-									Creature child = this.produceChild(xNew, yNew);
-									// if murder is successful, interrupt the
-									// other creature and stop it reproducing
-									testCellContents.interrupt();
-									child.start();
-								}
+						// if test has creature in it check if child is
+						// successfully
+						// placed
+						if (testCellContents != null) {
+							// runs probablity check to see if murder of
+							// other creature is successful
+							if (this.murderSuccessful(testCellContents)) {
+								Creature child = this.produceChild(xNew, yNew);
+								// if murder is successful, interrupt the
+								// other creature and stop it reproducing
+								testCellContents.interrupt();
+								child.start();
 							}
 						}
 					}
@@ -141,7 +130,7 @@ abstract class Creature extends Thread {
 	/**
 	 * Method that determines if an occupied Square is overwritten
 	 * 
-	 * @return
+	 * @return boolean true if successful
 	 */
 	private boolean murderSuccessful(Creature enemy) {
 		// generates random number to use as a test, gets the fitness of the
@@ -154,16 +143,34 @@ abstract class Creature extends Thread {
 		return false;
 	}
 
+	/**
+	 * @return the string that will be printed when the 2D array is displayed
+	 */
 	public abstract String toString();
 
+	/**Method to return the fitness of a specific creature
+	 * 
+	 * @return double fitness value of a creature
+	 */
 	abstract public double getFitness();
 
+	/**
+	 * Creates a concrete instance of the species
+	 * 
+	 * @param x
+	 *            position of the world 2D array
+	 * @param y
+	 *            position on the world 2D array
+	 * @return Creature object
+	 * 
+	 */
 	abstract public Creature produceChild(int x, int y);
 
-	public int getLifespan() {
-
-		return this.lifespan;
-	}
+	/**Getter for lifespan instance variable
+	 * 
+	 * @return value of a creatures lifespan
+	 */
+	abstract public int getLifespan(); 
 
 	/**
 	 * The run method thread sleeps for it's life span and then reproduces
@@ -173,11 +180,11 @@ abstract class Creature extends Thread {
 
 		if (!Thread.interrupted()) {
 			try {
-				Creature.sleep(this.lifespan);
+				Creature.sleep(this.getLifespan());
 				this.reproduce();
 
 			} catch (InterruptedException e) {
-				
+
 				// e.printStackTrace();
 			}
 

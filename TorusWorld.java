@@ -6,14 +6,6 @@ public class TorusWorld extends World {
 		super(rows, cols);
 	}
 
-	public Creature getCellContents(int x, int y) {
-		
-		Creature inGrid = grid[x][y];
-		
-		return inGrid;
-
-	}
-
 	
 	// Method to handle out of bounds coordinates on X axis
 	public int alterXPosition(int x) {
@@ -38,12 +30,5 @@ public class TorusWorld extends World {
 
 	}
 
-//	@Override
-//	public void insertCreature(int x, int y, Creature speciesType) {
-//
-//		grid[x][y] = speciesType;
-//	}
-
-	
 
 }

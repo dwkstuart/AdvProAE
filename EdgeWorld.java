@@ -5,18 +5,7 @@ public class EdgeWorld extends World{
 		
 		super(rows, cols);
 	}
-/**
- * 
- */
-	public Creature getCellContents(int x, int y) {
-			return grid[x][y];
-		
-	}
 
-//public void insertCreature(int x, int y, Creature speciesType) {
-//
-//	grid[x][y] = speciesType;
-//}
 
 public int alterXPosition(int x) {
 	if (x < 0) {
